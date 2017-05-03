@@ -8,8 +8,6 @@ access_token = '2994712059-BxdCYDbjfkkYBnEC1uxUzOvTWC1puUckrRyyC1B' #access_toke
 access_token_secret = 'gjw7cxCJs5kNbWrdHnxsk6cwxi4W7huefnQXqWxXXcrga' #token_secret
 
 
-
-
 class TweepyHandler: #Twitter class
     def __init__(self): #Init tweepy function, referenced from tweepy docs, prints 'Init complete' when finished
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
