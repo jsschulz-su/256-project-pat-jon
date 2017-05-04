@@ -2,6 +2,7 @@ from tkinter import *
 import tweepy
 import sys
 
+#Twitter keys
 consumer_key = 'AlfLQVBsQ30vcoaey1scPkzk7' #consumer_key
 consumer_secret = '5Xru2iNdY3lhxE7WzgL3UWHStQzVdZDFXppFUu8zZq1FfJBRPL' #consumer_secret
 access_token = '2994712059-BxdCYDbjfkkYBnEC1uxUzOvTWC1puUckrRyyC1B' #access_token
@@ -41,7 +42,8 @@ class TweepyHandler: #Twitter class
                 print('Error, please enter another hashtag!')
             i+=1
         return hashtag_list
-class MainProgram(object):
+
+class MainProgram(object): #main class for GUI & Inputs
     masterwindow = None
     subwindow = None
     stop_prog = False
@@ -51,38 +53,35 @@ class MainProgram(object):
     twitter_hashtag = ''
     num_of_tweets_hash = 0
     
-    def search_input_user(self):
+    def search_input_user(self):#function for username input
         string_siu = self.a.get()
         self.twitter_username = string_siu
         
         string_siu = self.b.get()
         self.num_of_tweets_user = int(string_siu)
-            
 
-    def search_input_hashtag(self):
+    def search_input_hashtag(self): #function for hashtag input
         string_sih = self.d.get()
         self.twitter_hashtag = string_sih
         
         string_sih = self.e.get()
         self.num_of_tweets_hash = int(string_sih)
 
-    def close_window(self):
+    def close_window(self): #closing main window
         self.masterwindow.destroy()
         
-    def restart_prog(self):
+    def restart_prog(self): #closing subwindow
         self.subwindow.destroy()
 
-    def stop_prog_handler(self):
+    def stop_prog_handler(self): #quit program function
         self.stop_prog = True
         self.subwindow.destroy()
-        print('quit')
 
-    #gui window
-    def init_main_window(self):
+    def init_main_window(self): #main window
         self.masterwindow = Tk()
 
         self.masterwindow.title('Twitter Search')
-        self.masterwindow.geometry("260x260+500+220")
+        self.masterwindow.geometry("260x170+500+220")
         #row0
         la = Label(self.masterwindow,text='Username')
         la.grid(row=0)
@@ -120,35 +119,38 @@ class MainProgram(object):
         f.grid(row=5,column=1)
         #row6
         g = Button(self.masterwindow,text='Close Window & Get Results')
-        g.grid(row=6)
+        g.grid(row=6,column=1)
         g['command'] = self.close_window
 
         self.masterwindow.mainloop()
 
-    def init_results_window(self,formatted_str):
+    def init_results_window(self,formatted_str): #results window
         self.subwindow = Tk()
         self.subwindow.title('Results Window')
+        
         h = Text(self.subwindow)
         h.insert(INSERT,formatted_str)
         h.grid(row=0)
+        
         h_reset = Button(self.subwindow,text='Restart')
         h_reset.grid(row=1,column=0)
         h_reset['command'] = self.restart_prog
+        
         h_stop = Button(self.subwindow,text='Quit')
-        h_stop.grid(row=1,column=1)
+        h_stop.grid(row=2)
         h_stop['command'] = self.stop_prog_handler
+        
         self.subwindow.mainloop()
 
-non_bmp_map = dict.fromkeys(range(0x10000, sys.maxunicode + 1), 0xfffd) #resolve error with utf-8 encoding
+#resolve error with utf-8 encoding
+non_bmp_map = dict.fromkeys(range(0x10000, sys.maxunicode + 1), 0xfffd)
 
-#main program
-def main():
+def main(): #main program function
     m = MainProgram()
     m.init_main_window()
     try:
         x = TweepyHandler()
         ret_val_user = x.get_user_tweets(m.twitter_username, m.num_of_tweets_user)
-        #m.
         ret_val_hash = x.get_input_hashtag(m.twitter_hashtag, m.num_of_tweets_hash)
 
         #results formatting
@@ -165,23 +167,16 @@ def main():
         formatted_str = title_username+user_tweet_str+'\n\n'+title_hashtag+hashtag_tweet_str
     except:
         print('That is not valid input!')
-        formatted_str='That is not valid input!'
+        formatted_str='That is not valid input!\nPotential reasons why:\n-inaccurate username or hashtag\n-too high count\-none or more of the fields are empty\n-you did not hit all buttons for input'
     m.init_results_window(formatted_str)
     return m
 
+#main program function call in while True loop
 stop_prog = False
 while True:
     if not stop_prog:
        m = main()
        stop_prog = m.stop_prog
-       print(m.stop_prog)
     else:
         print("Quit Program")
         break
-
-
-
-
-
-
-
